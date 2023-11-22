@@ -1,4 +1,12 @@
 package br.com.amplitude.amplitudefood.api.model;
 
-public record StateModel(Long id, String name) {
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class StateModel {
+
+    private Long id;
+    private String name;
 }
