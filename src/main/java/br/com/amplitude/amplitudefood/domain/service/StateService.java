@@ -23,4 +23,10 @@ public class StateService {
     public State save(State state) {
         return stateRepository.save(state);
     }
+
+    @Transactional
+    public void deleteById(Long stateId) {
+        State state = findById(stateId);
+        stateRepository.delete(state);
+    }
 }

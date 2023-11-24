@@ -1,6 +1,7 @@
 package br.com.amplitude.amplitudefood.api.exceptionhandler;
 
 import br.com.amplitude.amplitudefood.exception.EntityNotFoundException;
+import br.com.amplitude.amplitudefood.exception.ResourceInUseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.MessageSource;
@@ -26,6 +27,16 @@ import java.util.stream.Collectors;
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final MessageSource messageSource;
+
+    @ExceptionHandler(ResourceInUseException.class)
+    public ResponseEntity<Object> handleResourceInUse(ResourceInUseException ex, WebRequest request) {
+        HttpStatus conflictStatus = HttpStatus.CONFLICT;
+        ApiErrorResponse errorResponse = createApiErrorResponseBuilder(conflictStatus, ErrorType.RESOURCE_IN_USE, request)
+                .errorMessage(ex.getMessage())
+                .build();
+
+        return handleExceptionInternal(ex, errorResponse, new HttpHeaders(), conflictStatus, request);
+    }
 
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
